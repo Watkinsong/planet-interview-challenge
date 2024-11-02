@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Planet\InterviewChallenge\Infrastructure;
 
 use Laminas\Diactoros\Response;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
@@ -30,12 +28,8 @@ class RouteHandler
         $this->initRouter();
     }
 
-    public function processRequest(): void
+    public function processRequest(ServerRequestInterface $request): Response
     {
-        $request = ServerRequestFactory::fromGlobals(
-            $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
-        );
-
         try {
             $response = $this->router->dispatch($request);
         } catch (NotFoundException $e) {
@@ -44,7 +38,7 @@ class RouteHandler
             $response = $this->handleBadRequestException($e->getMessage());
         }
 
-        (new SapiEmitter)->emit($response);
+        return $response;
     }
 
     private function initRouter(): void
