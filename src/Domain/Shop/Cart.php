@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Planet\InterviewChallenge\Domain\Shop;
 
 class Cart implements \JsonSerializable
