@@ -11,20 +11,20 @@ use League\Route\Http\Exception\BadRequestException;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use Planet\InterviewChallenge\Domain\Shop\Controller\CartController;
-use Planet\InterviewChallenge\Service\SmartyTemplateService;
+use Planet\InterviewChallenge\Service\TemplateService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RouteHandler
 {
     private Router $router;
-    private SmartyTemplateService $smartyTemplateService;
+    private TemplateService $templateService;
 
     private CartController $cartController;
 
-    public function __construct(SmartyTemplateService $smartyTemplateService, CartController $cartController)
+    public function __construct(TemplateService $templateService, CartController $cartController)
     {
-        $this->smartyTemplateService = $smartyTemplateService;
+        $this->templateService = $templateService;
         $this->cartController = $cartController;
 
         $this->initRouter();
@@ -62,10 +62,8 @@ class RouteHandler
 
     private function handleNotFoundException(): Response
     {
-        $smarty = $this->smartyTemplateService->getSmarty();
-
         ob_start();
-        $smarty->display('ErrorPages/404.tpl');
+        $this->templateService->display('ErrorPages/404.tpl');
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -76,11 +74,9 @@ class RouteHandler
 
     private function handleBadRequestException(string $message): Response
     {
-        $smarty = $this->smartyTemplateService->getSmarty();
-
         ob_start();
-        $smarty->assign('message', $message);
-        $smarty->display('ErrorPages/400.tpl');
+        $this->templateService->assign('message', $message);
+        $this->templateService->display('ErrorPages/400.tpl');
         $content = ob_get_contents();
         ob_end_clean();
 

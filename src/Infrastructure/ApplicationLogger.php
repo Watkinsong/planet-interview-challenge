@@ -7,7 +7,7 @@ namespace Planet\InterviewChallenge\Infrastructure;
 use Laminas\Diactoros\Response;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Planet\InterviewChallenge\Service\SmartyTemplateService;
+use Planet\InterviewChallenge\Service\TemplateService;
 use Ramsey\Uuid\Uuid;
 use Throwable;
 
@@ -15,27 +15,25 @@ class ApplicationLogger
 {
     private Logger $logger;
 
-    private SmartyTemplateService $smartyTemplateService;
+    private TemplateService $templateService;
 
-    public function __construct(SmartyTemplateService $smartyTemplateService)
+    public function __construct(TemplateService $templateService)
     {
-        $this->smartyTemplateService = $smartyTemplateService;
+        $this->templateService = $templateService;
 
         $this->initLogger();
     }
 
     public function handleGenericException(Throwable $exception): Response
     {
-        $smarty = $this->smartyTemplateService->getSmarty();
-
         $locator = Uuid::uuid4()->toString();
 
         self::logException($exception, $locator);
 
         ob_start();
         try {
-            $smarty->assign('locator', $locator);
-            $smarty->display('ErrorPages/500.tpl');
+            $this->templateService->assign('locator', $locator);
+            $this->templateService->display('ErrorPages/500.tpl');
             $content = ob_get_contents();
         } catch (Throwable $e) {
             self::logException($e, $locator);

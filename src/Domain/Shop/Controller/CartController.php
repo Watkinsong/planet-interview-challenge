@@ -6,26 +6,25 @@ namespace Planet\InterviewChallenge\Domain\Shop\Controller;
 
 use League\Route\Http\Exception\BadRequestException;
 use Planet\InterviewChallenge\Domain\Shop\Service\CartItemExpirationService;
-use Planet\InterviewChallenge\Service\SmartyTemplateService;
-use Smarty\Smarty;
+use Planet\InterviewChallenge\Service\TemplateService;
 use Planet\InterviewChallenge\Domain\Shop\Cart;
 use Planet\InterviewChallenge\Domain\Shop\CartItem;
-use Planet\InterviewChallenge\Domain\Shop\Decorator\Smarty\CartSmartyDecorator;
-use Planet\InterviewChallenge\Infrastructure\SmartyRenderer;
+use Planet\InterviewChallenge\Domain\Shop\Decorator\Template\CartTemplateDecorator;
+use Planet\InterviewChallenge\Infrastructure\TemplateRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response;
 
 class CartController
 {
-    private Smarty $smarty;
+    private TemplateService $templateService;
     private CartItemExpirationService $cartItemExpirationService;
 
     public function __construct(
-        SmartyTemplateService $smartyTemplateService,
+        TemplateService $templateService,
         CartItemExpirationService $cartItemExpirationService
     ) {
-        $this->smarty = $smartyTemplateService->getSmarty();
+        $this->templateService = $templateService;
         $this->cartItemExpirationService = $cartItemExpirationService;
     }
 
@@ -52,12 +51,10 @@ class CartController
             $cart->addItem(new CartItem((int)$item->price, $expiration));
         }
 
-        $renderer = new SmartyRenderer($this->smarty);
-
-        $content = $renderer->render(
+        $content = $this->templateService->render(
             'App.tpl',
             [
-                'ShopCart' => new CartSmartyDecorator($this->smarty, $cart),
+                'ShopCart' => new CartTemplateDecorator($this->templateService, $cart),
             ]
         );
 
