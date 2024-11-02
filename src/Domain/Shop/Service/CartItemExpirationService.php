@@ -19,9 +19,6 @@ class CartItemExpirationService
 
     private DateTimeFactory $dateTimeFactory;
 
-    /**
-     * @param DateTimeFactory $dateTimeFactory
-     */
     public function __construct(DateTimeFactory $dateTimeFactory)
     {
         $this->dateTimeFactory = $dateTimeFactory;

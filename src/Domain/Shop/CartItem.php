@@ -16,27 +16,10 @@ class CartItem implements \JsonSerializable
         $this->price = $price;
     }
 
-    public function isAvailable(): bool
-    {
-        return $this->expires <= time();
-    }
-
-
-    public function getPrice(): int
-    {
-        return $this->price;
-    }
-
-    public function getExpires(): int
-    {
-        return $this->expires;
-    }
-
     /**
      * Returns the state representation of the object.
      *
-     * @param int $format Constant from the class CartItem
-     * @return string|object State representation of the class.
+     * @return string State representation of the class, encoded in JSON.
      */
     public function getState(): string
     {
@@ -50,5 +33,15 @@ class CartItem implements \JsonSerializable
         $state->expires = $this->expires;
 
         return $state;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+    public function getExpires(): int
+    {
+        return $this->expires;
     }
 }

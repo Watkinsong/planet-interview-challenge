@@ -17,9 +17,6 @@ class ApplicationLogger
 
     private SmartyTemplateService $smartyTemplateService;
 
-    /**
-     * @param SmartyTemplateService $smartyTemplateService
-     */
     public function __construct(SmartyTemplateService $smartyTemplateService)
     {
         $this->smartyTemplateService = $smartyTemplateService;
