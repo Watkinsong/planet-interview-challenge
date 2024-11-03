@@ -59,5 +59,4 @@ class TemplateService
             return date($format, $timestamp);
         });
     }
-
 }

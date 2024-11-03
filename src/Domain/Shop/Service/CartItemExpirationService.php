@@ -9,13 +9,13 @@ use Planet\InterviewChallenge\Service\DateTimeFactory;
 
 class CartItemExpirationService
 {
-    const MODE_NO_LIMIT = 0;
+    public const MODE_NO_LIMIT = 0;
 
-    const MODE_HOUR = 1;
+    public const MODE_HOUR = 1;
 
-    const MODE_MINUTE = 10;
+    public const MODE_MINUTE = 10;
 
-    const MODE_SECONDS = 1000;
+    public const MODE_SECONDS = 1000;
 
     private DateTimeFactory $dateTimeFactory;
 

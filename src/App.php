@@ -19,7 +19,11 @@ class App
     {
         try {
             $request = ServerRequestFactory::fromGlobals(
-                $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
+                $_SERVER,
+                $_GET,
+                $_POST,
+                $_COOKIE,
+                $_FILES
             );
 
             $response = self::container()->get(RouteHandler::class)->processRequest($request);
@@ -27,7 +31,7 @@ class App
             $response = self::container()->get(ApplicationLogger::class)->handleGenericException($e);
         }
 
-        (new SapiEmitter)->emit($response);
+        (new SapiEmitter())->emit($response);
     }
 
     public static function container(): Container

@@ -67,7 +67,8 @@ class CartController
     /**
      * @throws BadRequestException
      */
-    private static function valueToMode($value, &$modifier): int {
+    private static function valueToMode($value, &$modifier): int
+    {
 
         switch ($value) {
             case 'never':

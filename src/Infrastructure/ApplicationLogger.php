@@ -48,10 +48,17 @@ class ApplicationLogger
 
     private function logException(Throwable $exception, string $locator): void
     {
-        $this->logger->error('', ['locator' => $locator, 'message' => $exception->getMessage(), 'trace' => $exception->getTrace()]);
+        $this->logger->error(
+            '',
+            [
+                'locator' => $locator,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTrace()
+            ]
+        );
     }
 
-    private  function initLogger(): void
+    private function initLogger(): void
     {
         $this->logger = new Logger('application');
         $this->logger->pushHandler(new StreamHandler(__DIR__ . '/../../log/error.log'));

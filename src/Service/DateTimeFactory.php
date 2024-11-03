@@ -6,7 +6,7 @@ namespace Planet\InterviewChallenge\Service;
 
 class DateTimeFactory
 {
-    function now(): \DateTimeImmutable
+    public function now(): \DateTimeImmutable
     {
         return new \DateTimeImmutable();
     }

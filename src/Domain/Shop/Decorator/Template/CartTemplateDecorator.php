@@ -12,7 +12,8 @@ class CartTemplateDecorator
     private TemplateService $templateService;
     private Cart $cart;
 
-    public function __construct(TemplateService $templateService, Cart $cart){
+    public function __construct(TemplateService $templateService, Cart $cart)
+    {
         $this->templateService = $templateService;
         $this->cart = $cart;
     }
