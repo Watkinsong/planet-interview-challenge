@@ -41,6 +41,10 @@ class ApplicationLogger
         }
         ob_end_clean();
 
+        if ($content === false) {
+            throw new \RuntimeException('Output buffering is not active');
+        }
+
         $response = new Response();
         $response->getBody()->write($content);
         return $response;

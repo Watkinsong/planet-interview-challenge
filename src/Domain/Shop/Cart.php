@@ -19,6 +19,9 @@ class Cart implements \JsonSerializable
         $this->items[] = $cartItem;
     }
 
+    /**
+     * @return CartItem[]
+     */
     public function getItems(): array
     {
         return $this->items;
@@ -26,9 +29,18 @@ class Cart implements \JsonSerializable
 
     public function getState(): string
     {
-        return json_encode($this);
+        $state = json_encode($this);
+
+        if ($state === false) {
+            throw new \RuntimeException('Could not JSON encode cart state.');
+        }
+
+        return $state;
     }
 
+    /**
+     * @return CartItem[]
+     */
     public function jsonSerialize(): array
     {
         return $this->items;

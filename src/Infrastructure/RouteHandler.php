@@ -10,7 +10,6 @@ use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use Planet\InterviewChallenge\Domain\Shop\Controller\CartController;
 use Planet\InterviewChallenge\Service\TemplateService;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RouteHandler
@@ -31,6 +30,7 @@ class RouteHandler
     public function processRequest(ServerRequestInterface $request): Response
     {
         try {
+            /** @var Response $response */
             $response = $this->router->dispatch($request);
         } catch (NotFoundException $e) {
             $response = $this->handleNotFoundException();
@@ -48,7 +48,7 @@ class RouteHandler
         $this->router->map(
             'GET',
             '/index.php',
-            function (ServerRequestInterface $request): ResponseInterface {
+            function (ServerRequestInterface $request): Response {
                 return $this->cartController->showCart($request);
             }
         );
@@ -60,6 +60,10 @@ class RouteHandler
         $this->templateService->display('ErrorPages/404.tpl');
         $content = ob_get_contents();
         ob_end_clean();
+
+        if ($content === false) {
+            throw new \RuntimeException('Output buffering is not active');
+        }
 
         $response = new Response();
         $response->getBody()->write($content);
@@ -73,6 +77,10 @@ class RouteHandler
         $this->templateService->display('ErrorPages/400.tpl');
         $content = ob_get_contents();
         ob_end_clean();
+
+        if ($content === false) {
+            throw new \RuntimeException('Output buffering is not active');
+        }
 
         $response = new Response();
         $response->getBody()->write($content);

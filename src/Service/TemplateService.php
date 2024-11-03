@@ -15,6 +15,9 @@ class TemplateService
         $this->initSmarty();
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function render(string $templateName, array $data = []): string
     {
         ob_start();
@@ -22,12 +25,19 @@ class TemplateService
             $this->assign($key, $value);
         }
         $this->display($templateName);
-        $render = ob_get_contents();
+        $content = ob_get_contents();
         ob_end_clean();
 
-        return $render;
+        if ($content === false) {
+            throw new \RuntimeException('Output buffering is not active');
+        }
+
+        return $content;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function assign(string $key, $value): void
     {
         $this->smarty->assign($key, $value);
@@ -38,7 +48,7 @@ class TemplateService
         return $this->smarty->fetch($string);
     }
 
-    public function display(string $templateFile)
+    public function display(string $templateFile): void
     {
         $this->smarty->display($templateFile);
     }

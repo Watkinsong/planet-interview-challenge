@@ -10,8 +10,6 @@ use Planet\InterviewChallenge\Service\TemplateService;
 use Planet\InterviewChallenge\Domain\Shop\Cart;
 use Planet\InterviewChallenge\Domain\Shop\CartItem;
 use Planet\InterviewChallenge\Domain\Shop\Decorator\Template\CartTemplateDecorator;
-use Planet\InterviewChallenge\Infrastructure\TemplateRenderer;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response;
 
@@ -31,10 +29,12 @@ class CartController
     /**
      * @throws BadRequestException
      */
-    public function showCart(ServerRequestInterface $request): ResponseInterface
+    public function showCart(ServerRequestInterface $request): Response
     {
         $params = $request->getQueryParams();
 
+
+        /** @var object{'expires':string, 'price': int}[]|null $items */
         $items = json_decode($params['items'] ?? '[]');
 
         if ($items === null) {
@@ -44,6 +44,7 @@ class CartController
         $cart = new Cart();
 
         foreach ($items as $item) {
+            $modifier = 0;
             $expiration = $this->cartItemExpirationService->generateExpiration(
                 self::valueToMode($item->expires, $modifier),
                 $modifier
@@ -67,7 +68,7 @@ class CartController
     /**
      * @throws BadRequestException
      */
-    private static function valueToMode($value, &$modifier): int
+    private static function valueToMode(string $value, int &$modifier): int
     {
 
         switch ($value) {

@@ -25,7 +25,13 @@ class CartItem implements \JsonSerializable
      */
     public function getState(): string
     {
-        return json_encode($this);
+        $state = json_encode($this);
+
+        if ($state === false) {
+            throw new \RuntimeException('Could not JSON encode cart item state.');
+        }
+
+        return $state;
     }
 
     public function jsonSerialize(): object

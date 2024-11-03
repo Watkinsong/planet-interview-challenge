@@ -19,7 +19,7 @@ class CartItemTest extends TestCase
         $this->dateTimeFactory = null;
     }
 
-    public function testIsAvailable()
+    public function testIsAvailable(): void
     {
         $now = new DateTimeImmutable();
 

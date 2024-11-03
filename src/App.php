@@ -26,9 +26,13 @@ class App
                 $_FILES
             );
 
-            $response = self::container()->get(RouteHandler::class)->processRequest($request);
+            /** @var RouteHandler $routeHandler */
+            $routeHandler = self::container()->get(RouteHandler::class);
+            $response = $routeHandler->processRequest($request);
         } catch (Throwable $e) {
-            $response = self::container()->get(ApplicationLogger::class)->handleGenericException($e);
+            /** @var ApplicationLogger $applicationLogger */
+            $applicationLogger = self::container()->get(ApplicationLogger::class);
+            $response = $applicationLogger->handleGenericException($e);
         }
 
         (new SapiEmitter())->emit($response);
