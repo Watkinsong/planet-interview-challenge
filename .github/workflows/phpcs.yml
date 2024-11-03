@@ -1,0 +1,38 @@
+name: PHP-CS
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  COMPOSER_ALLOW_SUPERUSER: 1
+  COMPOSER_HOME: /composer
+  GITHUB_WORKSPACE: /github/workspace/planet-interview-challenge
+  ENV: dev
+
+jobs:
+  php-cs:
+    runs-on: [ self-hosted ]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fetch data from git
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: Install dependencies
+        working-directory: .
+        run: |
+          composer install --prefer-dist --no-progress --no-suggest --ignore-platform-req=ext-gd
+
+      - name: Code Check
+        run: |
+          make php_code_check
+
+      - uses: AutoModality/action-clean@v1
